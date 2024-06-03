@@ -1,0 +1,82 @@
+{% extends "layout.html" %} 
+{% load static %}
+
+{% block title %}
+blog
+{% endblock title %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'home.css' %}" />
+{% endblock link %}
+
+{% block content %}
+<div class="blog-box">
+  {% for item in data %}
+  <div class="container">
+    <div class="blog-content">
+      <h2>{{item.blog_content.title}}</h2>
+      <p>{{item.blog_content.content}}</p>
+      
+      <div class="blog-author">
+        <span>Written by: <strong>{{item.blog_content.author}}</strong></span><br/>
+        <span class="text-uppercase text-success">{{item.blog_content.date}}</span>
+      </div>
+    </div>
+    <div class="blog-footer">
+      <div class="blog-actions">
+        <span class="btns">
+          <span>
+            <button class="like-btn"><a href="{% url "post_like" item.blog_content.id request.user.id %}">👍 Like</a></button>
+          </span>
+          <span>{{item.count_of_likes}}</span>
+        </span>
+        <span class="btns">
+          <span>
+            <button class="comment-btn">💬 Comment</button>
+          </span>
+          <span>{{item.count_of_comment}}</span>
+        </span>
+        <span class="btns">
+          <span>
+            <button class="dislike-btn"><a href="{% url "post_dislike" item.blog_content.id request.user.id %}">👎 Dislike</a></button>
+          </span>
+          <span>{{item.count_dislikes}}</span>
+        </span>
+      </div>
+    </div>
+  
+  {% comment %} started {% endcomment %}
+  <div class="comments-section">
+    <div class="comment-form">
+        <form method="post" action=" {% url 'post_comment' item.blog_content.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{request.user.id}}">
+            <textarea name="comment" placeholder="Write your comment here..." required></textarea>
+            <button type="submit">Post Comment</button>
+        </form>
+    </div>
+    
+    <!-- List of comments -->
+    <h3>Comments</h3>
+    {% for singlecomment in item.list_comment %}
+    <div class="commentblock">
+        <div class="comment-author">{{singlecomment.user.first_name}}</div>
+        <div class="comment-text">{{ singlecomment.comment_content }}</div>
+    </div>
+    {% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+</div>
+  
+{% comment %} comment sectino here {% endcomment %}
+
+  {% endfor %}
+</div>
+
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'home.js' %}"></script>
+{% endblock script %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}user login{% endblock title %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'login.css' %}">
+{% endblock link %}
+
+   {% block content %}
+   <div class="container">
+    <div class="form-wrapper">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}" role="alert">
+            {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+        <a href="/register">Register now</a>
+    </div>
+</div>
+   {% endblock %}
+ 
